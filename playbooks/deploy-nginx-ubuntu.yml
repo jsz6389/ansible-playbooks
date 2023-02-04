@@ -1,0 +1,27 @@
+---
+- name: Deploy an NGINX webserver with a load balancer
+  hosts: ubuntu
+  tasks:
+
+    - name: Install nginx
+      apt:
+        name: nginx
+        state: latest
+
+    - name: Copy nginx config file
+      copy:
+        src: /etc/ansible/files/nginx/load-balancer.conf
+        dest: /etc/nginx/conf.d/load-balancer.conf
+        
+    - name: Delete default from sites-enabled
+      ansible.builtin.file:
+        path: "/etc/nginx/sites-enables/default"
+        state: "absent"
+
+    - name: Enable nginx
+      service:
+        name: nginx
+        enabled: true
+        state: started
+
+

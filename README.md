@@ -12,6 +12,13 @@ There should also be a desired config file stored at `/etc/ansible/files/ossec/e
 
 ## deploy-apache-ubuntu.yml
 
-Deploy a simple apache webserver an ubuntu host
+Deploy a simple apache webserver on an ubuntu host
 
 Web server files should be stored at `/etc/ansible/files/apache/`
+
+
+## deply-nginx-ubuntu.yml
+
+Deploy a simple nginx load balancer on an ubuntu host
+
+Web server configs should be stored at `/etc/ansible/files/nginx/`
