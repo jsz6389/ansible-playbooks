@@ -1,0 +1,20 @@
+---
+- name: Deploy a simple apache webserver on ubuntu
+  hosts: webservers
+  tasks:
+
+    - name: Install apache2
+      apt:
+        name: apache2
+        state: latest
+
+    - name: Enable apache
+      service:
+        name: apache2
+        enabled: true
+        state: started
+
+    - name: Copy index.html
+      copy:
+        src: /etc/ansible/files/apache/index.html
+        dest: /var/www/html/index.html

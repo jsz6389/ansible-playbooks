@@ -1,0 +1,39 @@
+---
+- name: Deploy an OSSEC HIDS on all ubuntu hosts
+  hosts: ubuntu
+  tasks:
+    # For repo information, reference https://updates.atomicorp.com/installers/atomic
+    - name: Add ossec apt key
+      ansible.builtin.apt_key:
+        url: 'https://www.atomicorp.com/RPM-GPG-KEY.atomicorp.txt'
+        state: present
+
+    - name: Add ossec repo
+      ansible.builtin.apt_repository:
+        repo: deb [trusted=yes] https://updates.atomicorp.com/channels/atomic/ubuntu jammy/amd64/
+        state: present
+
+    - name: apt-get update
+      apt: update_cache=yes force_apt_get=yes cache_valid_time=3600
+
+    - name: Install ossec-hids-agent
+      apt:
+        name: ossec-hids-agent
+        state: latest
+
+    - name: Copy client.key
+      copy:
+        src: /etc/ansible/files/ossec/client_keys/{{inventory_hostname}}
+        dest: /var/ossec/etc/client.keys
+
+    - name: Copy ossec.conf
+      copy:
+        src: /etc/ansible/files/ossec/etc/ossec.conf
+        dest: /var/ossec/etc/ossec.conf
+
+    - name: Enable ossec service
+      service:
+        name: ossec
+        enabled: true
+        state: started
+
