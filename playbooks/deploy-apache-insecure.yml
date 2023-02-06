@@ -1,0 +1,43 @@
+---
+- name: Deploy a simple apache webserver on ubuntu
+  hosts: webservers
+  tasks:
+
+    - name: Install apache2
+      apt:
+        name: apache2
+        state: latest
+
+    - name: Stop apache
+      service:
+        name: apache2
+        enabled: true
+        state: stopped
+
+    - name: Copy index.html
+      copy:
+        src: /etc/ansible/files/apache/index.html
+        dest: /var/www/html/index.html
+
+    - name: Fetch the necessary .deb packages
+      ansible.builtin.shell:
+         cmd: wget http://launchpadlibrarian.net/557734987/libssl1.1_1.1.1l-1ubuntu1_amd64.deb
+         cmd: wget http://launchpadlibrarian.net/560725664/apache2_2.4.48-3.1ubuntu3_amd64.deb
+         cmd: wget http://launchpadlibrarian.net/560725667/apache2-bin_2.4.48-3.1ubuntu3_amd64.deb
+         cmd: wget http://launchpadlibrarian.net/560725670/apache2-utils_2.4.48-3.1ubuntu3_amd64.deb
+         cmd: wget http://launchpadlibrarian.net/560725657/apache2-data_2.4.48-3.1ubuntu3_all.deb
+
+    - name: Install the .deb packages
+      ansible.builtin.shell:
+         cmd: dpkg -i libssl1.1_1.1.1l-1ubuntu1_amd64.deb
+         cmd: dpkg -i apache2-bin_2.4.48-3.1ubuntu3_amd64.deb
+         cmd: dpkg -i apache2-utils_2.4.48-3.1ubuntu3_amd64.deb
+         cmd: dpkg -i apache2-data_2.4.48-3.1ubuntu3_all.deb
+         cmd: dpkg -i apache2_2.4.48-3.1ubuntu3_amd64.deb
+
+    - name: Start apache
+      service:
+         name: apache2
+         enabled: true
+         state: started
+

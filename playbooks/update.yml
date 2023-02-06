@@ -1,0 +1,21 @@
+---
+- name: Update all ubuntu hosts
+  hosts: ubuntu
+  tasks:
+
+    - name: apt-get update
+      apt:
+         update-cache: yes
+
+    - name: apt-get upgrade
+      apt:
+         name: '*'
+         state: latest
+
+- name: Update all arch linux hosts
+  hosts: arch
+  tasks:
+    - name: pacman -syu
+      pacman:
+         update_cache: yes
+         upgrade: yes
